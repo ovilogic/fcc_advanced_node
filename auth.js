@@ -27,7 +27,6 @@ module.exports = function (app, myDataBase) {
           console.log(profile);
           myDataBase.findOneAndUpdate(
             {id: profile.id},
-            
             {
               $setOnInsert: {
                 id: profile.id,

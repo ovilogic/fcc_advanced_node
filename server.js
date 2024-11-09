@@ -14,6 +14,9 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+const MongoStore = require('connect-mongo')(session);
+const URI = process.env.MONGO_URI;
+
 
 app.set('view engine', 'pug');
 app.set('views', './views/pug');
@@ -40,8 +43,20 @@ myDB(async client => {
   routes(app, myDataBase);
   auth(app, myDataBase);
 
+  let currentUsers = 0;
   io.on('connection', socket => {
+    ++currentUsers;
+    io.emit('user count', currentUsers)
     console.log('A user has connected')
+    socket.on('disconnect', () => {
+      --currentUsers;
+      io.emit('user count', currentUsers);
+    })
+    socket.on('logout', () => {
+      socket.disconnect();
+      console.log('user done')
+    })
+      
   });
 
 }).catch(e => {
