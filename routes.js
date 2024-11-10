@@ -73,7 +73,7 @@ module.exports = function (app, myDataBase) {
       )
 
       app.route('/chat').get(ensureAuthenticated, (req, res) => {
-        res.render('chat', {user: req.user})
+        res.render('chat', {user: req.user.username})
       })
 
       function ensureAuthenticated(req, res ,next) {
